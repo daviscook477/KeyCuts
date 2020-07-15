@@ -27,7 +27,7 @@ public class CardSelectConfirmButtonPatches
 			String[] TEXT = UIStrings.TEXT;
 			if (self.hb.hovered && !Settings.isTouchScreen) {
 				TipHelper.renderGenericTip(Settings.WIDTH / 2.0F - 256.0f * Settings.scale, TAKE_Y - 50.0F * Settings.scale, buttonText + " (" +
-						InputActionSet.confirm.getKeyString() + ")", TEXT[0]);
+						InputActionSet.confirm.getKeyString() + ")", TEXT[1]);
 			}
 		}
 	}
