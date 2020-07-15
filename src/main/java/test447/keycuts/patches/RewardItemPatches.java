@@ -75,7 +75,6 @@ public class RewardItemPatches
 	@SpirePatch(clz=RewardItem.class, method="render")
 	public static class Render
 	{
-		@SpireInsertPatch(locator=RenderLocator.class)
 		public static void Postfix(RewardItem self, SpriteBatch sb)
 		{
 			if (!KeyCuts.showCombatRewardHotKeys())
@@ -86,13 +85,6 @@ public class RewardItemPatches
 			float x = RewardItem.REWARD_ITEM_X + self.hb.width - 80.0f * Settings.scale;
 			FontHelper.renderFontRightAligned(sb, FontHelper.buttonLabelFont, InputActionSet.selectCardActions[slot].getKeyString(),
 					x, self.y, Settings.CREAM_COLOR);
-		}
-	}
-
-	private static class RenderLocator extends SpireInsertLocator {
-		public int[] Locate(CtBehavior ctMethodToPatch) throws CannotCompileException, PatchingException {
-			Matcher finalMatcher = new Matcher.MethodCallMatcher(Hitbox.class, "render");
-			return LineFinder.findInOrder(ctMethodToPatch, new ArrayList<>(), finalMatcher);
 		}
 	}
 }

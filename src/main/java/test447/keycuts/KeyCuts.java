@@ -33,6 +33,8 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
             defaults.put("ShowCardRewardHotKeys", Boolean.toString(true));
             defaults.put("UseCombatRewardHotKeys", Boolean.toString(true));
             defaults.put("ShowCombatRewardHotKeys", Boolean.toString(true));
+            defaults.put("UseCampfireHotKeys", Boolean.toString(true));
+            defaults.put("ShowCampfireHotKeys", Boolean.toString(true));
             modConfig = new SpireConfig("KeyCuts", "Config", defaults);
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,6 +49,7 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
         addToggleButtons(useDialogHotKeys(), "UseDialogHotKeys", TEXT[0], showDialogHotKeys(), "ShowDialogHotKeys", TEXT[1], settingsPanel);
         addToggleButtons(useCardRewardHotKeys(), "UseCardRewardHotKeys", TEXT[2], showCardRewardHotKeys(), "ShowCardRewardHotKeys", TEXT[3], settingsPanel);
         addToggleButtons(useCombatRewardHotKeys(), "UseCombatRewardHotKeys", TEXT[4], showCombatRewardHotKeys(), "ShowCombatRewardHotKeys", TEXT[5], settingsPanel);
+        addToggleButtons(useCampfireHotKeys(), "UseCampfireHotKeys", TEXT[6], showCampfireHotKeys(), "ShowCampfireHotKeys", TEXT[7], settingsPanel);
         BaseMod.registerModBadge(ImageMaster.loadImage(MOD_ID + "Resources/img/modBadge.png"), MOD_ID, "test447", "Play even more of the game with just your keyboard", settingsPanel);
     }
 
@@ -56,7 +59,7 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
     }
 
     private float xPos = 360.0f;
-    private float yPos = 800.0f;
+    private float yPos = 600.0f;
 
     public void addToggleButtons(boolean enabled, String key, String text, boolean connectedEnabled, String connectedKey, String connectedText, ModPanel settingsPanel)
     {
@@ -139,5 +142,19 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
         if (modConfig == null)
             return false;
         return modConfig.getBool("ShowCombatRewardHotKeys");
+    }
+
+    public static boolean useCampfireHotKeys()
+    {
+        if (modConfig == null)
+            return false;
+        return modConfig.getBool("UseCampfireHotKeys");
+    }
+
+    public static boolean showCampfireHotKeys()
+    {
+        if (modConfig == null)
+            return false;
+        return modConfig.getBool("ShowCampfireHotKeys");
     }
 }

@@ -9,7 +9,9 @@ import com.evacipated.cardcrawl.modthespire.lib.SpireInsertPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.patcher.PatchingException;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
+import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.helpers.FontHelper;
 import com.megacrit.cardcrawl.helpers.Hitbox;
 import com.megacrit.cardcrawl.helpers.input.InputActionSet;
 import com.megacrit.cardcrawl.rooms.CampfireUI;
@@ -18,6 +20,7 @@ import com.megacrit.cardcrawl.ui.campfire.AbstractCampfireOption;
 import java.util.ArrayList;
 import javassist.CannotCompileException;
 import javassist.CtBehavior;
+import test447.keycuts.KeyCuts;
 
 public class AbstractCampfireOptionPatches
 {
@@ -27,6 +30,8 @@ public class AbstractCampfireOptionPatches
 		@SpireInsertPatch(locator=Locator.class, localvars={"canClick"})
 		public static void Insert(AbstractCampfireOption self, boolean canClick)
 		{
+			if (!KeyCuts.useCampfireHotKeys())
+				return;
 			if (!canClick)
 				return;
 			CampfireUI campfireUI = ((RestRoom)AbstractDungeon.getCurrRoom()).campfireUI;
@@ -54,7 +59,18 @@ public class AbstractCampfireOptionPatches
 	{
 		public static void Postfix(AbstractCampfireOption self, SpriteBatch sb)
 		{
-
+			if (!KeyCuts.showCampfireHotKeys())
+				return;
+			CampfireUI campfireUI = ((RestRoom)AbstractDungeon.getCurrRoom()).campfireUI;
+			ArrayList<AbstractCampfireOption> buttons = (ArrayList<AbstractCampfireOption>) ReflectionHacks.getPrivate(campfireUI, CampfireUI.class, "buttons");
+			int slot = buttons.indexOf(self);
+			if (slot >= InputActionSet.selectCardActions.length)
+				return;
+			float x = self.hb.cX;
+			float textSpacing = 100.0f * Settings.scale;
+			float textY = self.hb.cY + textSpacing;
+			FontHelper.renderFontCentered(sb, FontHelper.buttonLabelFont, InputActionSet.selectCardActions[slot].getKeyString(),
+					x, textY, Settings.CREAM_COLOR);
 		}
 	}
 }
