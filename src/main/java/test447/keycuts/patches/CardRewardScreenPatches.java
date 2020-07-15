@@ -17,7 +17,7 @@ public class CardRewardScreenPatches
 	@SpirePatch(clz=CardRewardScreen.class, method="cardSelectUpdate")
 	public static class CardSelectUpdate
 	{
-		@SpireInsertPatch(loc=245, localvars={"hoveredCard"})
+		@SpireInsertPatch(loc=257, localvars={"hoveredCard"})
 		public static void Insert(CardRewardScreen self, @ByRef AbstractCard[] hoveredCard)
 		{
 			if (!KeyCuts.useCardRewardHotKeys())
