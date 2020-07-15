@@ -19,7 +19,7 @@ public class CampfireUIPatches
 			for (AbstractCampfireOption option : buttons)
 			{
 				String label = (String) ReflectionHacks.getPrivate(option, AbstractCampfireOption.class, "label");
-				label += " (!M!)";
+				label += SLOT_REPLACEMENT_INDICATOR;
 				ReflectionHacks.setPrivate(option, AbstractCampfireOption.class, "label", label);
 			}
 		}

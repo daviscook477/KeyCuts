@@ -37,7 +37,10 @@ public class AbstractCampfireOptionPatches
 			if (slot >= InputActionSet.selectCardActions.length)
 				return;
 			String label = (String) ReflectionHacks.getPrivate(self, AbstractCampfireOption.class, "label");
-			label = label.replace(CampfireUIPatches.SLOT_REPLACEMENT_INDICATOR, InputActionSet.selectCardActions[slot].getKeyString());
+			String visualIndicator = "";
+			if (KeyCuts.showCampfireHotKeys())
+				visualIndicator = " (" + InputActionSet.selectCardActions[slot].getKeyString() + ")";
+			label = label.replace(CampfireUIPatches.SLOT_REPLACEMENT_INDICATOR, visualIndicator);
 			ReflectionHacks.setPrivate(self, AbstractCampfireOption.class, "label", label);
 			if (InputActionSet.selectCardActions[slot].isJustPressed())
 			{

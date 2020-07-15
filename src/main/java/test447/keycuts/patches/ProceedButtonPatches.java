@@ -28,6 +28,8 @@ public class ProceedButtonPatches
 		@SpireInsertPatch(locator=Locator.class)
 		public static void Insert(ProceedButton self)
 		{
+			if (!KeyCuts.useProceedHotKeys())
+				return;
 			if (InputActionSet.endTurn.isJustPressed())
 			{
 				CardCrawlGame.sound.play("UI_CLICK_1");
@@ -49,6 +51,8 @@ public class ProceedButtonPatches
 	{
 		public static void Postfix(ProceedButton self, SpriteBatch sb)
 		{
+			if (!KeyCuts.useProceedHotKeys())
+				return;
 			Hitbox hb = (Hitbox) ReflectionHacks.getPrivate(self, ProceedButton.class, "hb");
 			float x = (float) ReflectionHacks.getPrivate(self, ProceedButton.class, "current_x");
 			float y = (float) ReflectionHacks.getPrivate(self, ProceedButton.class, "current_y");

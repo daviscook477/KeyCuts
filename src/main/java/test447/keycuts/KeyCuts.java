@@ -27,14 +27,28 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
         BaseMod.subscribe(new KeyCuts());
         try {
             Properties defaults = new Properties();
+            // dialog
             defaults.put("UseDialogHotKeys", Boolean.toString(true));
             defaults.put("ShowDialogHotKeys", Boolean.toString(true));
+
+            // card rewards
             defaults.put("UseCardRewardHotKeys", Boolean.toString(true));
             defaults.put("ShowCardRewardHotKeys", Boolean.toString(true));
+
+            // combat rewards
             defaults.put("UseCombatRewardHotKeys", Boolean.toString(true));
             defaults.put("ShowCombatRewardHotKeys", Boolean.toString(true));
+
+            // campfires
             defaults.put("UseCampfireHotKeys", Boolean.toString(true));
             defaults.put("ShowCampfireHotKeys", Boolean.toString(true));
+
+            // proceed/skip/confirm buttons
+            defaults.put("UseProceedHotKeys", Boolean.toString(true));
+
+            // map navigation
+            defaults.put("UseMapHotKeys", Boolean.toString(true));
+            defaults.put("ShowMapHotKeys", Boolean.toString(true));
             modConfig = new SpireConfig("KeyCuts", "Config", defaults);
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,6 +64,8 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
         addToggleButtons(useCardRewardHotKeys(), "UseCardRewardHotKeys", TEXT[2], showCardRewardHotKeys(), "ShowCardRewardHotKeys", TEXT[3], settingsPanel);
         addToggleButtons(useCombatRewardHotKeys(), "UseCombatRewardHotKeys", TEXT[4], showCombatRewardHotKeys(), "ShowCombatRewardHotKeys", TEXT[5], settingsPanel);
         addToggleButtons(useCampfireHotKeys(), "UseCampfireHotKeys", TEXT[6], showCampfireHotKeys(), "ShowCampfireHotKeys", TEXT[7], settingsPanel);
+        addToggleButton(useProceedHotKeys(), "UseProceedHotKeys", TEXT[8], settingsPanel);
+        addToggleButtons(useMapHotKeys(), "UseMapHotKeys", TEXT[9], showMapHotKeys(), "ShowMapHotKeys", TEXT[10], settingsPanel);
         BaseMod.registerModBadge(ImageMaster.loadImage(MOD_ID + "Resources/img/modBadge.png"), MOD_ID, "test447", "Play even more of the game with just your keyboard", settingsPanel);
     }
 
@@ -91,6 +107,26 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
                             modConfig.setBool(connectedKey, false);
                             connectedToggleButton.toggle.enabled = false;
                         }
+                        try {
+                            modConfig.save();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        yPos -= 50.0f;
+        settingsPanel.addUIElement(toggleButton);
+    }
+
+    public void addToggleButton(boolean enabled, String key, String text, ModPanel settingsPanel)
+    {
+        ModLabeledToggleButton toggleButton = new ModLabeledToggleButton(text, xPos, yPos,
+                Settings.CREAM_COLOR, FontHelper.charDescFont, enabled, settingsPanel, l -> {},
+                button ->
+                {
+                    if (modConfig != null)
+                    {
+                        modConfig.setBool(key, button.enabled);
                         try {
                             modConfig.save();
                         } catch (IOException e) {
@@ -156,5 +192,26 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
         if (modConfig == null)
             return false;
         return modConfig.getBool("ShowCampfireHotKeys");
+    }
+
+    public static boolean useProceedHotKeys()
+    {
+        if (modConfig == null)
+            return false;
+        return modConfig.getBool("UseProceedHotKeys");
+    }
+
+    public static boolean useMapHotKeys()
+    {
+        if (modConfig == null)
+            return false;
+        return modConfig.getBool("UseMapHotKeys");
+    }
+
+    public static boolean showMapHotKeys()
+    {
+        if (modConfig == null)
+            return false;
+        return modConfig.getBool("ShowMapHotKeys");
     }
 }
