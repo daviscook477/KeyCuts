@@ -19,7 +19,7 @@ import java.util.Properties;
 @SpireInitializer
 public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
 {
-    private static final String MOD_ID = "test447_keycuts";
+    public static final String MOD_ID = "test447_keycuts";
     private static SpireConfig modConfig = null;
 
     public static void initialize()
@@ -43,7 +43,7 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
 
     @Override
     public void receivePostInitialize() {
-        UIStrings UIStrings = CardCrawlGame.languagePack.getUIString(MOD_ID);
+        UIStrings UIStrings = CardCrawlGame.languagePack.getUIString(MOD_ID + ":settings");
         String[] TEXT = UIStrings.TEXT;
         ModPanel settingsPanel = new ModPanel();
         addToggleButtons(useDialogHotKeys(), "UseDialogHotKeys", TEXT[0], showDialogHotKeys(), "ShowDialogHotKeys", TEXT[1], settingsPanel);
@@ -59,7 +59,7 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
     }
 
     private float xPos = 360.0f;
-    private float yPos = 600.0f;
+    private float yPos = 740.0f;
 
     public void addToggleButtons(boolean enabled, String key, String text, boolean connectedEnabled, String connectedKey, String connectedText, ModPanel settingsPanel)
     {

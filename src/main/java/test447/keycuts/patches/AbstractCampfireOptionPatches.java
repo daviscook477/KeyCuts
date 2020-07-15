@@ -67,7 +67,7 @@ public class AbstractCampfireOptionPatches
 			if (slot >= InputActionSet.selectCardActions.length)
 				return;
 			float x = self.hb.cX;
-			float textSpacing = 100.0f * Settings.scale;
+			float textSpacing = 110.0f * Settings.scale;
 			float textY = self.hb.cY + textSpacing;
 			FontHelper.renderFontCentered(sb, FontHelper.buttonLabelFont, InputActionSet.selectCardActions[slot].getKeyString(),
 					x, textY, Settings.CREAM_COLOR);
