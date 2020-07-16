@@ -108,7 +108,7 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
                         }
                     }
                 });
-        yPos -= 50.0f;
+        yPos -= 37.0f;
         settingsPanel.addUIElement(connectedToggleButton);
         ModLabeledToggleButton toggleButton = new ModLabeledToggleButton(text, xPos, yPos,
                 Settings.CREAM_COLOR, FontHelper.charDescFont, enabled, settingsPanel, l -> {},
@@ -129,7 +129,7 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
                         }
                     }
                 });
-        yPos -= 50.0f;
+        yPos -= 37.0f;
         settingsPanel.addUIElement(toggleButton);
     }
 
