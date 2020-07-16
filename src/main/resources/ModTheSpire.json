@@ -1,0 +1,10 @@
+{
+  "modid": "test447_keycuts",
+  "name": "KeyCuts",
+  "author_list": ["test447"],
+  "description": "Adds keyboard shortcuts (like the card quick select keys) to nearly everything in the game.",
+  "version": "0.1",
+  "sts_version": "06-15-2018",
+  "mts_version": "2.7.0",
+  "dependencies": ["basemod"]
+}

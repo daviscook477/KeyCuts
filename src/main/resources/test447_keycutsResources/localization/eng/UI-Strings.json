@@ -1,0 +1,31 @@
+{
+  "test447_keycuts:settings": {
+    "TEXT": [
+      "Enable using your card select hotkeys to choose dialog options",
+      "Show a visual indicator of which hotkey to use for each dialog option",
+      "Enable using your card select hotkeys to choose card choices",
+      "Show a visual indicator of which hotkey to use for each card choice",
+      "Enable using your card select hotkeys to choose combat rewards",
+      "Show a visual indicator of which hotkey to use for each combat reward choice",
+      "Enable using your card select hotkeys to choose campfire options",
+      "Show a visual indicator of which hotkey to use for each campfire option",
+      "Enable using your end turn hotkey to choose \"Proceed\", \"Skip\", and \"Continue\" buttons",
+      "Enable using your card select hotkeys to choose map rooms",
+      "Show a visual indicator of which hotkey to use for each map room",
+      "Enable using your card select hotkeys to choose chest options",
+      "Show a visual indicator of which hotkey to use for each chest option",
+      "Enable using your card select hotkeys to choose shop options",
+      "Show a visual indicator of which hotkey to use for each shop option",
+      "Enable using your end turn hotkey to confirm card selection"
+    ]
+  },
+  "test447_keycuts:tooltips": {
+    "TEXT": [
+      "Pressing this button will continue onto the next action.",
+      "Pressing this button will confirm your current selection.",
+      "CTRL",
+      "SHIFT",
+      "TAB"
+    ]
+  }
+}
