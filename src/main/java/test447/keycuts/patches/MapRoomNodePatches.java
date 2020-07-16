@@ -21,6 +21,7 @@ import javassist.CannotCompileException;
 import javassist.CtBehavior;
 import test447.keycuts.KeyCuts;
 import test447.keycuts.helpers.MapHelper;
+import test447.keycuts.helpers.MapRoomNodeLabel;
 
 public class MapRoomNodePatches
 {
@@ -69,8 +70,9 @@ public class MapRoomNodePatches
 			float y = self.y * Settings.MAP_DST_Y + OFFSET_Y + DungeonMapScreen.offsetY + self.offsetY;
 			float scale = (float) ReflectionHacks.getPrivate(self, MapRoomNode.class, "scale");
 			float textY = y + 64.0f * Settings.scale * scale;
-			FontHelper.renderFontCentered(sb, FontHelper.buttonLabelFont, InputActionSet.selectCardActions[slot].getKeyString(),
-					x, textY, Settings.CREAM_COLOR);
+			DungeonMapScreenPatches.Render.lateRenderLabels.add(
+					new MapRoomNodeLabel(InputActionSet.selectCardActions[slot].getKeyString(),
+							x, textY));
 		}
 	}
 }

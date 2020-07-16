@@ -1,6 +1,7 @@
 package test447.keycuts.patches;
 
 import basemod.ReflectionHacks;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.evacipated.cardcrawl.modthespire.Loader;
 import com.evacipated.cardcrawl.modthespire.lib.LineFinder;
@@ -34,6 +35,20 @@ public class ShopScreenPatches
 	public static HashMap<StoreRelic, Integer> shopRelicPositionMap = new HashMap<>();
 	public static HashMap<StorePotion, Integer> shopPotionPositionMap = new HashMap<>();
 
+	public static final int[] SHORTCUT_MODIFIER_KEYS_2 = { 59, 60 };
+
+	public static boolean isShortcutModifierKey2Pressed()
+	{
+		for (int keycode : SHORTCUT_MODIFIER_KEYS_2)
+		{
+			if (Gdx.input.isKeyPressed(keycode))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@SpirePatch(clz=ShopScreen.class, method="setStartingCardPositions")
 	public static class SetStartingCardPositions
 	{
@@ -63,7 +78,7 @@ public class ShopScreenPatches
 			int i;
 			for (i = 0; i < relics.size(); i++)
 			{
-				shopRelicPositionMap.put(relics.get(i), i + self.coloredCards.size() + self.colorlessCards.size());
+				shopRelicPositionMap.put(relics.get(i), i);
 			}
 		}
 	}
@@ -86,7 +101,7 @@ public class ShopScreenPatches
 	@SpirePatch(clz=ShopScreen.class, method="update")
 	public static class Update
 	{
-		public static void SelectCardsAndRelics(ShopScreen self)
+		public static void SelectCards(ShopScreen self)
 		{
 			for (AbstractCard card : self.coloredCards)
 			{
@@ -140,6 +155,10 @@ public class ShopScreenPatches
 					// because hotkeys aren't working
 				}
 			}
+		}
+
+		public static void SelectRelics(ShopScreen self)
+		{
 			ArrayList<StoreRelic> relics = (ArrayList<StoreRelic>) ReflectionHacks.getPrivate(self, ShopScreen.class, "relics");
 			for (StoreRelic storeRelic : relics)
 			{
@@ -203,9 +222,13 @@ public class ShopScreenPatches
 			// swap between selections based on modifier
 			if (InputHelper.isShortcutModifierKeyPressed())
 				SelectPotions(self);
+			else if (isShortcutModifierKey2Pressed())
+				SelectRelics(self);
 			else
-				SelectCardsAndRelics(self);
-			SelectPurge(self);
+			{
+				SelectCards(self);
+				SelectPurge(self);
+			}
 		}
 
 		private static class Locator extends SpireInsertLocator {
@@ -223,8 +246,8 @@ public class ShopScreenPatches
 		{
 			if (!KeyCuts.showShopHotKeys())
 				return;
-			// don't show cards when modifier is held
-			if (InputHelper.isShortcutModifierKeyPressed())
+			// don't show cards when either modifier is held
+			if (InputHelper.isShortcutModifierKeyPressed() || isShortcutModifierKey2Pressed())
 				return;
 			for (AbstractCard card : self.coloredCards)
 			{
@@ -263,6 +286,7 @@ public class ShopScreenPatches
 			// don't show relics when modifier is held
 			if (InputHelper.isShortcutModifierKeyPressed())
 				return;
+			boolean modifierPressed = isShortcutModifierKey2Pressed();
 			ArrayList<StoreRelic> relics = (ArrayList<StoreRelic>) ReflectionHacks.getPrivate(self, ShopScreen.class, "relics");
 			for (StoreRelic storeRelic : relics)
 			{
@@ -271,10 +295,11 @@ public class ShopScreenPatches
 					continue;
 				AbstractRelic relic = storeRelic.relic;
 				FloatyEffect f_effect = (FloatyEffect) ReflectionHacks.getPrivate(relic, AbstractRelic.class, "f_effect");
+				String numberString = InputActionSet.selectCardActions[slot].getKeyString();
 				FontHelper.renderFontCentered(sb, FontHelper.buttonLabelFont,
-						InputActionSet.selectCardActions[slot].getKeyString(),
-						relic.currentX + f_effect.x, relic.currentY + f_effect.y + 22.0f * Settings.scale * relic.scale,
-						Settings.CREAM_COLOR);
+						modifierPressed ? numberString : "SHIFT",
+						relic.currentX + f_effect.x, relic.currentY + f_effect.y + 26.0f * Settings.scale * relic.scale,
+						Settings.CREAM_COLOR, modifierPressed ? 1.0f : 0.7f);
 			}
 		}
 	}
@@ -285,6 +310,9 @@ public class ShopScreenPatches
 		public static void Postfix(ShopScreen self, SpriteBatch sb)
 		{
 			if (!KeyCuts.showShopHotKeys())
+				return;
+			// don't show potions when secondary modifier is held
+			if (isShortcutModifierKey2Pressed())
 				return;
 			boolean modifierPressed = InputHelper.isShortcutModifierKeyPressed();
 			ArrayList<StorePotion> potions = (ArrayList<StorePotion>) ReflectionHacks.getPrivate(self, ShopScreen.class, "potions");
@@ -309,6 +337,9 @@ public class ShopScreenPatches
 		public static void Postfix(ShopScreen self, SpriteBatch sb)
 		{
 			if (!KeyCuts.showShopHotKeys())
+				return;
+			// don't show purge when either modifier is held
+			if (InputHelper.isShortcutModifierKeyPressed() || isShortcutModifierKey2Pressed())
 				return;
 			if (!self.purgeAvailable)
 				return;
