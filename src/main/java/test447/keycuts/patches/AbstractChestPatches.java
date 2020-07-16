@@ -55,7 +55,8 @@ public class AbstractChestPatches
 			if (!self.isOpen)
 			{
 				FontHelper.renderFontCentered(sb, FontHelper.buttonLabelFont, InputActionSet.selectCardActions[0].getKeyString(),
-						AbstractChest.CHEST_LOC_X, AbstractChest.CHEST_LOC_Y + 20.0f * Settings.scale, Settings.CREAM_COLOR);
+						AbstractChest.CHEST_LOC_X, AbstractChest.CHEST_LOC_Y +
+								60.0f * Settings.scale, Settings.CREAM_COLOR);
 			}
 		}
 	}

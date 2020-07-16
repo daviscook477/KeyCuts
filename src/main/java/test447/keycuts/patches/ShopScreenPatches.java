@@ -35,6 +35,7 @@ public class ShopScreenPatches
 	public static HashMap<StoreRelic, Integer> shopRelicPositionMap = new HashMap<>();
 	public static HashMap<StorePotion, Integer> shopPotionPositionMap = new HashMap<>();
 
+	// SHIFT
 	public static final int[] SHORTCUT_MODIFIER_KEYS_2 = { 59, 60 };
 
 	public static boolean isShortcutModifierKey2Pressed()

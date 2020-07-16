@@ -14,21 +14,21 @@ import com.megacrit.cardcrawl.helpers.Hitbox;
 import com.megacrit.cardcrawl.helpers.TipHelper;
 import com.megacrit.cardcrawl.helpers.input.InputActionSet;
 import com.megacrit.cardcrawl.localization.UIStrings;
-import com.megacrit.cardcrawl.ui.buttons.CardSelectConfirmButton;
+import com.megacrit.cardcrawl.ui.buttons.GridSelectConfirmButton;
 import java.util.ArrayList;
 import javassist.CannotCompileException;
 import javassist.CtBehavior;
 import test447.keycuts.KeyCuts;
 
-public class CardSelectConfirmButtonPatches
+public class GridSelectConfirmButtonPatches
 {
-	@SpirePatch(clz=CardSelectConfirmButton.class, method="update")
+	@SpirePatch(clz=GridSelectConfirmButton.class, method="update")
 	public static class Update
 	{
 		@SpireInsertPatch(locator=Locator.class)
-		public static void Insert(CardSelectConfirmButton self)
+		public static void Insert(GridSelectConfirmButton self)
 		{
-			if (!KeyCuts.allowCardSelectConfirmEndTurn())
+			if (!KeyCuts.useProceedHotKeys())
 				return;
 			if (InputActionSet.endTurn.isJustPressed())
 			{
@@ -49,22 +49,21 @@ public class CardSelectConfirmButtonPatches
 		}
 	}
 
-	@SpirePatch(clz=CardSelectConfirmButton.class, method="render")
+	@SpirePatch(clz=GridSelectConfirmButton.class, method="render")
 	public static class Render
 	{
-		public static void Postfix(CardSelectConfirmButton self, SpriteBatch sb)
+		public static void Postfix(GridSelectConfirmButton self, SpriteBatch sb)
 		{
-			if (!KeyCuts.allowCardSelectConfirmEndTurn())
+			if (!KeyCuts.useProceedHotKeys())
 				return;
-			boolean isHidden = (boolean) ReflectionHacks.getPrivate(self, CardSelectConfirmButton.class, "isHidden");
-			if (isHidden)
-				return;
-			float TAKE_Y = (float) ReflectionHacks.getPrivateStatic(CardSelectConfirmButton.class, "TAKE_Y");
-			String buttonText = (String) ReflectionHacks.getPrivate(self, CardSelectConfirmButton.class, "buttonText");
+			float x = (float) ReflectionHacks.getPrivate(self, GridSelectConfirmButton.class, "current_x");
+			float y = (float) ReflectionHacks.getPrivateStatic(GridSelectConfirmButton.class, "DRAW_Y")
+					+ (float) ReflectionHacks.getPrivateStatic(GridSelectConfirmButton.class, "TEXT_OFFSET_Y");
+			String buttonText = (String) ReflectionHacks.getPrivate(self, GridSelectConfirmButton.class, "buttonText");
 			UIStrings UIStrings = CardCrawlGame.languagePack.getUIString(KeyCuts.MOD_ID + ":tooltips");
 			String[] TEXT = UIStrings.TEXT;
 			if (self.hb.hovered && !Settings.isTouchScreen) {
-				TipHelper.renderGenericTip(Settings.WIDTH / 2.0F - 160.0f * Settings.scale, TAKE_Y - 100.0F * Settings.scale, buttonText + " (" +
+				TipHelper.renderGenericTip(x - 140.0F * Settings.scale, y + 200.0F * Settings.scale, buttonText + " (" +
 						InputActionSet.endTurn.getKeyString() + ")", TEXT[1]);
 			}
 		}
