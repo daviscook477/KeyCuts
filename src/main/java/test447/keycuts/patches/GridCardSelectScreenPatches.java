@@ -11,10 +11,12 @@ import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.patcher.PatchingException;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.CardGroup;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.FontHelper;
 import com.megacrit.cardcrawl.helpers.input.InputActionSet;
 import com.megacrit.cardcrawl.helpers.input.InputHelper;
+import com.megacrit.cardcrawl.localization.UIStrings;
 import com.megacrit.cardcrawl.screens.select.GridCardSelectScreen;
 import com.megacrit.cardcrawl.ui.buttons.PeekButton;
 import java.util.ArrayList;
@@ -126,7 +128,9 @@ public class GridCardSelectScreenPatches
 					float topOfCard = card.current_y + height;
 					float textSpacing = 20.0f * Settings.scale;
 					float textY = topOfCard + textSpacing;
-					FontHelper.renderFontCentered(sb, FontHelper.buttonLabelFont, "TAB",
+					UIStrings UIStrings = CardCrawlGame.languagePack.getUIString(KeyCuts.MOD_ID + ":tooltips");
+					String[] TEXT = UIStrings.TEXT;
+					FontHelper.renderFontCentered(sb, FontHelper.buttonLabelFont, TEXT[4],
 							card.current_x, textY, Settings.CREAM_COLOR, 0.7f);
 				}
 			}

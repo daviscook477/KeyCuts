@@ -11,10 +11,12 @@ import com.evacipated.cardcrawl.modthespire.lib.SpireInsertPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.patcher.PatchingException;
 import com.megacrit.cardcrawl.cards.AbstractCard;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.FontHelper;
 import com.megacrit.cardcrawl.helpers.input.InputActionSet;
 import com.megacrit.cardcrawl.helpers.input.InputHelper;
+import com.megacrit.cardcrawl.localization.UIStrings;
 import com.megacrit.cardcrawl.potions.AbstractPotion;
 import com.megacrit.cardcrawl.relics.AbstractRelic;
 import com.megacrit.cardcrawl.shop.ShopScreen;
@@ -297,8 +299,10 @@ public class ShopScreenPatches
 				AbstractRelic relic = storeRelic.relic;
 				FloatyEffect f_effect = (FloatyEffect) ReflectionHacks.getPrivate(relic, AbstractRelic.class, "f_effect");
 				String numberString = InputActionSet.selectCardActions[slot].getKeyString();
+				UIStrings UIStrings = CardCrawlGame.languagePack.getUIString(KeyCuts.MOD_ID + ":tooltips");
+				String[] TEXT = UIStrings.TEXT;
 				FontHelper.renderFontCentered(sb, FontHelper.buttonLabelFont,
-						modifierPressed ? numberString : "SHIFT",
+						modifierPressed ? numberString : TEXT[3],
 						relic.currentX + f_effect.x, relic.currentY + f_effect.y + 26.0f * Settings.scale * relic.scale,
 						Settings.CREAM_COLOR, modifierPressed ? 1.0f : 0.7f);
 			}
@@ -324,8 +328,10 @@ public class ShopScreenPatches
 					continue;
 				AbstractPotion potion = storePotion.potion;
 				String numberString = InputActionSet.selectCardActions[slot].getKeyString();
+				UIStrings UIStrings = CardCrawlGame.languagePack.getUIString(KeyCuts.MOD_ID + ":tooltips");
+				String[] TEXT = UIStrings.TEXT;
 				FontHelper.renderFontCentered(sb, FontHelper.buttonLabelFont,
-						modifierPressed ? numberString : "CTRL",
+						modifierPressed ? numberString : TEXT[2],
 						potion.posX, potion.posY + 22.0f * Settings.scale * potion.scale,
 						Settings.CREAM_COLOR, modifierPressed ? 1.0f : 0.7f);
 			}
