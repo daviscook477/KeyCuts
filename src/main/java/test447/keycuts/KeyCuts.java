@@ -49,6 +49,15 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
             // map navigation
             defaults.put("UseMapHotKeys", Boolean.toString(true));
             defaults.put("ShowMapHotKeys", Boolean.toString(true));
+
+            // chests
+            defaults.put("UseChestHotKeys", Boolean.toString(true));
+            defaults.put("ShowChestHotKeys", Boolean.toString(true));
+
+            // shops
+            defaults.put("UseShopHotKeys", Boolean.toString(true));
+            defaults.put("ShowShopHotKeys", Boolean.toString(true));
+
             modConfig = new SpireConfig("KeyCuts", "Config", defaults);
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,6 +75,8 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
         addToggleButtons(useCampfireHotKeys(), "UseCampfireHotKeys", TEXT[6], showCampfireHotKeys(), "ShowCampfireHotKeys", TEXT[7], settingsPanel);
         addToggleButton(useProceedHotKeys(), "UseProceedHotKeys", TEXT[8], settingsPanel);
         addToggleButtons(useMapHotKeys(), "UseMapHotKeys", TEXT[9], showMapHotKeys(), "ShowMapHotKeys", TEXT[10], settingsPanel);
+        addToggleButtons(useChestHotKeys(), "UseChestHotKeys", TEXT[11], showChestHotKeys(), "ShowChestHotKeys", TEXT[12], settingsPanel);
+        addToggleButtons(useShopHotKeys(), "UseShopHotKeys", TEXT[13], showShopHotKeys(), "ShowShopHotKeys", TEXT[14], settingsPanel);
         BaseMod.registerModBadge(ImageMaster.loadImage(MOD_ID + "Resources/img/modBadge.png"), MOD_ID, "test447", "Play even more of the game with just your keyboard", settingsPanel);
     }
 
@@ -213,5 +224,33 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
         if (modConfig == null)
             return false;
         return modConfig.getBool("ShowMapHotKeys");
+    }
+
+    public static boolean useChestHotKeys()
+    {
+        if (modConfig == null)
+            return false;
+        return modConfig.getBool("UseChestHotKeys");
+    }
+
+    public static boolean showChestHotKeys()
+    {
+        if (modConfig == null)
+            return false;
+        return modConfig.getBool("ShowChestHotKeys");
+    }
+
+    public static boolean useShopHotKeys()
+    {
+        if (modConfig == null)
+            return false;
+        return modConfig.getBool("UseShopHotKeys");
+    }
+
+    public static boolean showShopHotKeys()
+    {
+        if (modConfig == null)
+            return false;
+        return modConfig.getBool("ShowShopHotKeys");
     }
 }

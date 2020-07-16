@@ -68,7 +68,7 @@ public class RewardItemPatches
 	private static class UpdateLocator extends SpireInsertLocator {
 		public int[] Locate(CtBehavior ctMethodToPatch) throws CannotCompileException, PatchingException {
 			Matcher finalMatcher = new Matcher.MethodCallMatcher(Hitbox.class, "update");
-			return LineFinder.findInOrder(ctMethodToPatch, new ArrayList<>(), finalMatcher);
+			return new int[] {LineFinder.findInOrder(ctMethodToPatch, new ArrayList<>(), finalMatcher)[0] + 1};
 		}
 	}
 

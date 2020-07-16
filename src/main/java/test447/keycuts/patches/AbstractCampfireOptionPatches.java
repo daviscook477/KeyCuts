@@ -27,21 +27,21 @@ public class AbstractCampfireOptionPatches
 		@SpireInsertPatch(locator=Locator.class, localvars={"canClick"})
 		public static void Insert(AbstractCampfireOption self, boolean canClick)
 		{
+			CampfireUI campfireUI = ((RestRoom)AbstractDungeon.getCurrRoom()).campfireUI;
+			ArrayList<AbstractCampfireOption> buttons = (ArrayList<AbstractCampfireOption>) ReflectionHacks.getPrivate(campfireUI, CampfireUI.class, "buttons");
+			String label = (String) ReflectionHacks.getPrivate(self, AbstractCampfireOption.class, "label");
+			String visualIndicator = "";
+			int slot = buttons.indexOf(self);
+			if (KeyCuts.showCampfireHotKeys() && slot < InputActionSet.selectCardActions.length)
+				visualIndicator = " (" + InputActionSet.selectCardActions[slot].getKeyString() + ")";
+			label = label.replace(CampfireUIPatches.SLOT_REPLACEMENT_INDICATOR, visualIndicator);
+			ReflectionHacks.setPrivate(self, AbstractCampfireOption.class, "label", label);
 			if (!KeyCuts.useCampfireHotKeys())
 				return;
 			if (!canClick)
 				return;
-			CampfireUI campfireUI = ((RestRoom)AbstractDungeon.getCurrRoom()).campfireUI;
-			ArrayList<AbstractCampfireOption> buttons = (ArrayList<AbstractCampfireOption>) ReflectionHacks.getPrivate(campfireUI, CampfireUI.class, "buttons");
-			int slot = buttons.indexOf(self);
 			if (slot >= InputActionSet.selectCardActions.length)
 				return;
-			String label = (String) ReflectionHacks.getPrivate(self, AbstractCampfireOption.class, "label");
-			String visualIndicator = "";
-			if (KeyCuts.showCampfireHotKeys())
-				visualIndicator = " (" + InputActionSet.selectCardActions[slot].getKeyString() + ")";
-			label = label.replace(CampfireUIPatches.SLOT_REPLACEMENT_INDICATOR, visualIndicator);
-			ReflectionHacks.setPrivate(self, AbstractCampfireOption.class, "label", label);
 			if (InputActionSet.selectCardActions[slot].isJustPressed())
 			{
 				CardCrawlGame.sound.play("UI_CLICK_1");

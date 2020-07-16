@@ -26,7 +26,7 @@ public class CardSelectConfirmButtonPatches
 			UIStrings UIStrings = CardCrawlGame.languagePack.getUIString(KeyCuts.MOD_ID + ":tooltips");
 			String[] TEXT = UIStrings.TEXT;
 			if (self.hb.hovered && !Settings.isTouchScreen) {
-				TipHelper.renderGenericTip(Settings.WIDTH / 2.0F - 256.0f * Settings.scale, TAKE_Y - 50.0F * Settings.scale, buttonText + " (" +
+				TipHelper.renderGenericTip(Settings.WIDTH / 2.0F - 160.0f * Settings.scale, TAKE_Y - 100.0F * Settings.scale, buttonText + " (" +
 						InputActionSet.confirm.getKeyString() + ")", TEXT[1]);
 			}
 		}

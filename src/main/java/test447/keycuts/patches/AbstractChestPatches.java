@@ -27,7 +27,7 @@ public class AbstractChestPatches
 		@SpireInsertPatch(locator=Locator.class)
 		public static void Insert(AbstractChest self)
 		{
-			if (!KeyCuts.useDialogHotKeys())
+			if (!KeyCuts.useChestHotKeys())
 				return;
 			if (InputActionSet.selectCardActions[0].isJustPressed())
 			{
@@ -50,10 +50,13 @@ public class AbstractChestPatches
 	{
 		public static void Postfix(AbstractChest self, SpriteBatch sb)
 		{
-			if (!KeyCuts.showDialogHotKeys())
+			if (!KeyCuts.showChestHotKeys())
 				return;
-			FontHelper.renderFontCentered(sb, FontHelper.buttonLabelFont, InputActionSet.selectCardActions[0].getKeyString(),
-					AbstractChest.CHEST_LOC_X, AbstractChest.CHEST_LOC_Y + 20.0f * Settings.scale, Settings.CREAM_COLOR);
+			if (!self.isOpen)
+			{
+				FontHelper.renderFontCentered(sb, FontHelper.buttonLabelFont, InputActionSet.selectCardActions[0].getKeyString(),
+						AbstractChest.CHEST_LOC_X, AbstractChest.CHEST_LOC_Y + 20.0f * Settings.scale, Settings.CREAM_COLOR);
+			}
 		}
 	}
 }
