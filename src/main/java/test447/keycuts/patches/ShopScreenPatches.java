@@ -108,6 +108,8 @@ public class ShopScreenPatches
 		{
 			for (AbstractCard card : self.coloredCards)
 			{
+				if (!shopCardPositionMap.containsKey(card))
+					continue;
 				int slot = shopCardPositionMap.get(card);
 				if (slot >= InputActionSet.selectCardActions.length)
 					continue;
@@ -134,6 +136,8 @@ public class ShopScreenPatches
 			}
 			for (AbstractCard card : self.colorlessCards)
 			{
+				if (!shopCardPositionMap.containsKey(card))
+					continue;
 				int slot = shopCardPositionMap.get(card);
 				if (slot >= InputActionSet.selectCardActions.length)
 					continue;
@@ -165,6 +169,8 @@ public class ShopScreenPatches
 			ArrayList<StoreRelic> relics = (ArrayList<StoreRelic>) ReflectionHacks.getPrivate(self, ShopScreen.class, "relics");
 			for (StoreRelic storeRelic : relics)
 			{
+				if (!shopRelicPositionMap.containsKey(storeRelic))
+					continue;
 				int slot = shopRelicPositionMap.get(storeRelic);
 				if (slot >= InputActionSet.selectCardActions.length)
 					continue;
@@ -181,6 +187,8 @@ public class ShopScreenPatches
 			ArrayList<StorePotion> potions = (ArrayList<StorePotion>) ReflectionHacks.getPrivate(self, ShopScreen.class, "potions");
 			for (StorePotion storePotion : potions)
 			{
+				if (!shopRelicPositionMap.containsKey(storePotion))
+					continue;
 				int slot = shopPotionPositionMap.get(storePotion);
 				if (slot >= InputActionSet.selectCardActions.length)
 					continue;
@@ -254,6 +262,8 @@ public class ShopScreenPatches
 				return;
 			for (AbstractCard card : self.coloredCards)
 			{
+				if (!shopCardPositionMap.containsKey(card))
+					continue;
 				int slot = shopCardPositionMap.get(card);
 				if (slot >= InputActionSet.selectCardActions.length)
 					continue;
@@ -266,6 +276,8 @@ public class ShopScreenPatches
 			}
 			for (AbstractCard card : self.colorlessCards)
 			{
+				if (!shopCardPositionMap.containsKey(card))
+					continue;
 				int slot = shopCardPositionMap.get(card);
 				if (slot >= InputActionSet.selectCardActions.length)
 					continue;
@@ -293,6 +305,8 @@ public class ShopScreenPatches
 			ArrayList<StoreRelic> relics = (ArrayList<StoreRelic>) ReflectionHacks.getPrivate(self, ShopScreen.class, "relics");
 			for (StoreRelic storeRelic : relics)
 			{
+				if (!shopRelicPositionMap.containsKey(storeRelic))
+					continue;
 				int slot = shopRelicPositionMap.get(storeRelic);
 				if (slot >= InputActionSet.selectCardActions.length)
 					continue;
@@ -323,6 +337,8 @@ public class ShopScreenPatches
 			ArrayList<StorePotion> potions = (ArrayList<StorePotion>) ReflectionHacks.getPrivate(self, ShopScreen.class, "potions");
 			for (StorePotion storePotion : potions)
 			{
+				if (!shopPotionPositionMap.containsKey(storePotion))
+					continue;
 				int slot = shopPotionPositionMap.get(storePotion);
 				if (slot >= InputActionSet.selectCardActions.length)
 					continue;
