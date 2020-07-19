@@ -14,6 +14,8 @@ public class MapHelper
 
 	public static boolean isDownfallMap()
 	{
+		if (!Loader.isModLoaded("downfall"))
+			return false;
 		boolean result = false;
 		try
 		{
@@ -63,7 +65,7 @@ public class MapHelper
 		MapRoomNode currMapNode = AbstractDungeon.getCurrMapNode();
 		ArrayList<ArrayList<MapRoomNode>> map = AbstractDungeon.map;
 		if(!AbstractDungeon.firstRoomChosen) {
-			if (Loader.isModLoaded("downfall") && isDownfallMap())
+			if (isDownfallMap())
 			{
 				addDownfallFirstRooms(choices);
 			}

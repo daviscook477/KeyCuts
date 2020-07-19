@@ -30,7 +30,6 @@ import javassist.CtBehavior;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
-import org.clapper.util.classutil.AbstractClassFilter;
 import org.clapper.util.classutil.AndClassFilter;
 import org.clapper.util.classutil.ClassFilter;
 import org.clapper.util.classutil.ClassFinder;
@@ -42,7 +41,7 @@ import test447.keycuts.KeyCuts;
 
 public class RewardItemPatches
 {
-	private static boolean consumed[] = null;//new boolean[InputActionSet.selectCardActions.length];
+	private static boolean consumed[] = null;
 
 	public static boolean isJustPressed(int slot) {
 		if (consumed == null)
@@ -218,7 +217,6 @@ public class RewardItemPatches
 		ClassFilter filter =
 				new AndClassFilter(
 						new NotClassFilter(new InterfaceOnlyClassFilter()),
-						new NotClassFilter(new AbstractClassFilter()),
 						new ClassModifiersClassFilter(Modifier.PUBLIC),
 						new SuperClassFilter(pool, RewardItem.class)
 				);

@@ -74,9 +74,10 @@ public class DungeonMapPatches
 				{
 					try
 					{
+						// there's no rhyme or reason to this - but it does position things correctly
 						Class flipMapBossStuff = Class.forName("downfall.patches.ui.map.FlipMap$BossStuff");
 						BOSS_OFFSET_Y = flipMapBossStuff.getDeclaredField("BOSS_OFFSET").getFloat(null) - mapOffsetY;
-						BOSS_W = flipMapBossStuff.getDeclaredField("BOSS_HB_OFFSET").getFloat(null);
+						BOSS_W = flipMapBossStuff.getDeclaredField("BOSS_HB_OFFSET").getFloat(null) + 80.0f * Settings.scale;
 					}
 					catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e)
 					{
