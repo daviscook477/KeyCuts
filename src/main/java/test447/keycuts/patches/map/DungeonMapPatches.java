@@ -75,7 +75,7 @@ public class DungeonMapPatches
 					try
 					{
 						Class flipMapBossStuff = Class.forName("downfall.patches.ui.map.FlipMap$BossStuff");
-						BOSS_OFFSET_Y = flipMapBossStuff.getDeclaredField("BOSS_OFFSET").getFloat(null);
+						BOSS_OFFSET_Y = flipMapBossStuff.getDeclaredField("BOSS_OFFSET").getFloat(null) - mapOffsetY;
 						BOSS_W = flipMapBossStuff.getDeclaredField("BOSS_HB_OFFSET").getFloat(null);
 					}
 					catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e)

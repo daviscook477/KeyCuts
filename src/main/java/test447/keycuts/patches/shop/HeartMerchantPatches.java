@@ -21,7 +21,7 @@ import test447.keycuts.KeyCuts;
 
 public class HeartMerchantPatches
 {
-	@SpirePatch(cls="downfall.util.HeartMerchant", method="update")
+	@SpirePatch(cls="downfall.util.HeartMerchant", method="update", optional=true)
 	public static class Update
 	{
 		@SpireInsertPatch(locator=Locator.class)
@@ -59,7 +59,7 @@ public class HeartMerchantPatches
 		}
 	}
 
-	@SpirePatch(cls="downfall.util.HeartMerchant", method="render")
+	@SpirePatch(cls="downfall.util.HeartMerchant", method="render", optional=true)
 	public static class Render
 	{
 		public static void Postfix(Object self, SpriteBatch sb)
@@ -73,7 +73,7 @@ public class HeartMerchantPatches
 					Class heartMerchant = Class.forName("downfall.util.HeartMerchant");
 					Hitbox hb = (Hitbox) heartMerchant.getDeclaredField("hb").get(self);
 					FontHelper.renderFontCentered(sb, FontHelper.buttonLabelFont, InputActionSet.selectCardActions[0].getKeyString(),
-							hb.cX + 20.0f * Settings.scale, hb.y + 700.0f * Settings.scale + 20.0f * Settings.scale, Settings.CREAM_COLOR);
+							hb.cX + 20.0f * Settings.scale, hb.y + 650.0f * Settings.scale + 20.0f * Settings.scale, Settings.CREAM_COLOR);
 				}
 				catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e)
 				{

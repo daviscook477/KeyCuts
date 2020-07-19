@@ -17,24 +17,36 @@ import com.megacrit.cardcrawl.helpers.input.InputActionSet;
 import com.megacrit.cardcrawl.rewards.RewardItem;
 import com.megacrit.cardcrawl.screens.CombatRewardScreen;
 import java.io.File;
+import java.lang.reflect.Modifier;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtBehavior;
 import javassist.CtClass;
+import javassist.CtMethod;
 import javassist.NotFoundException;
+import org.clapper.util.classutil.AbstractClassFilter;
+import org.clapper.util.classutil.AndClassFilter;
 import org.clapper.util.classutil.ClassFilter;
 import org.clapper.util.classutil.ClassFinder;
 import org.clapper.util.classutil.ClassInfo;
+import org.clapper.util.classutil.ClassModifiersClassFilter;
+import org.clapper.util.classutil.InterfaceOnlyClassFilter;
+import org.clapper.util.classutil.NotClassFilter;
 import test447.keycuts.KeyCuts;
-import test447.keycuts.helpers.SubclassClassFilter;
 
 public class RewardItemPatches
 {
-	private static boolean consumed[] = new boolean[InputActionSet.selectCardActions.length];
+	private static boolean consumed[] = null;//new boolean[InputActionSet.selectCardActions.length];
 
 	public static boolean isJustPressed(int slot) {
+		if (consumed == null)
+			consumed = new boolean[InputActionSet.selectCardActions.length];
 		if (consumed[slot])
 			return false;
 		boolean result = InputActionSet.selectCardActions[slot].isJustPressed();
@@ -48,6 +60,8 @@ public class RewardItemPatches
 	{
 		public static void Prefix(CombatRewardScreen self)
 		{
+			if (consumed == null)
+				consumed = new boolean[InputActionSet.selectCardActions.length];
 			int i;
 			for (i = 0; i < consumed.length; i++)
 			{
@@ -57,7 +71,7 @@ public class RewardItemPatches
 	}
 
 	@SpirePatch(clz=RewardItem.class, method="update")
-	public static class RewardItemUpdate
+	public static class Update
 	{
 		@SpireInsertPatch(locator=UpdateLocator.class)
 		public static void Insert(RewardItem self)
@@ -82,47 +96,46 @@ public class RewardItemPatches
 		}
 	}
 
-	public static boolean isJar(File file)
+	@SpirePatch(clz=CardCrawlGame.class, method=SpirePatch.CONSTRUCTOR)
+	public static class RewardItemSubClassUpdate
 	{
-		return file.getName().endsWith(".jar");
-	}
-
-	@SpirePatch(clz=RewardItem.class, method="update")
-	public static class RewardItemSubclassUpdate
-	{
-		public static void Raw(CtBehavior ctMethodToPatch)
+		public static void Raw(CtBehavior ctBehavior) throws NotFoundException, CannotCompileException
 		{
-			try
+			Collection<ClassInfo> foundClasses = getRewardItemSubClasses(ctBehavior);
+			ClassPool pool = ctBehavior.getDeclaringClass().getClassPool();
+
+			UpdateLocator locator = new UpdateLocator();
+			String src = Update.class.getName() + ".Insert($0);";
+
+			for (ClassInfo classInfo : foundClasses)
 			{
-				System.out.println("Can I even patch this");
-				ClassPool pool = Loader.getClassPool();
-				ClassFinder finder = new ClassFinder();
-				File modDirectory = new File(Loader.MOD_DIR);
-				ArrayList<File> modJars = new ArrayList<>();
-				for (File mod : modDirectory.listFiles())
+				try
 				{
-					if (isJar(mod))
-						modJars.add(mod);
-				}
-				finder.add(modJars);
-				ClassFilter filter = new SubclassClassFilter(RewardItem.class);
-				Collection<ClassInfo> foundClasses = new ArrayList<>();
-				finder.findClasses(foundClasses, filter);
-				for (ClassInfo classInfo : foundClasses)
-				{
-					String name = classInfo.getClassName();
-					System.out.println(name + " is a subclass of RewardItem");
-					try {
-						CtClass clazz = pool.get(name);
-					} catch (NotFoundException e) {
-						e.printStackTrace();
+					CtMethod update = null;
+					CtClass ctClass = pool.get(classInfo.getClassName());
+					try
+					{
+						update = ctClass.getDeclaredMethod("update");
+					}
+					catch (NotFoundException e)
+					{
+						// ignored
+					}
+
+					if (update != null)
+					{
+						int[] locs = locator.Locate(update);
+						int i;
+						for (i = 0; i < locs.length; i++)
+						{
+							update.insertAt(locs[i], src);
+						}
 					}
 				}
-			}
-			catch (Exception e)
-			{
-				System.out.println("No you can't patch this b/c: ");
-				e.printStackTrace();
+				catch (NotFoundException | PatchingException e)
+				{
+					// ignored
+				}
 			}
 		}
 	}
@@ -142,4 +155,105 @@ public class RewardItemPatches
 					x, self.y, Settings.CREAM_COLOR);
 		}
 	}
+
+	@SpirePatch(clz=CardCrawlGame.class, method=SpirePatch.CONSTRUCTOR)
+	public static class RewardItemSubClassRender
+	{
+		public static void Raw(CtBehavior ctBehavior) throws NotFoundException, CannotCompileException
+		{
+			Collection<ClassInfo> foundClasses = getRewardItemSubClasses(ctBehavior);
+			ClassPool pool = ctBehavior.getDeclaringClass().getClassPool();
+
+			String src = Render.class.getName() + ".Postfix($0, $1);";
+
+			for (ClassInfo classInfo : foundClasses)
+			{
+				try
+				{
+					CtMethod render = null;
+					CtClass ctClass = pool.get(classInfo.getClassName());
+					try
+					{
+						render = ctClass.getDeclaredMethod("render");
+					}
+					catch (NotFoundException e)
+					{
+						// ignored
+					}
+
+					if (render != null)
+					{
+						render.insertAfter(src);
+					}
+				}
+				catch (NotFoundException e)
+				{
+					// ignored
+				}
+			}
+		}
+	}
+
+	public static Collection<ClassInfo> getRewardItemSubClasses(CtBehavior ctBehavior) throws NotFoundException {
+		ClassFinder finder = new ClassFinder();
+		// This only searches mod files, as base game potions shouldn't show whatmod anyways
+		finder.add(
+				Arrays.stream(Loader.MODINFOS)
+						.map(modInfo -> modInfo.jarURL)
+						.filter(Objects::nonNull)
+						.map(url -> {
+							try {
+								return url.toURI();
+							} catch (URISyntaxException e) {
+								return null;
+							}
+						})
+						.filter(Objects::nonNull)
+						.map(File::new)
+						.collect(Collectors.toList())
+		);
+
+		ClassPool pool = ctBehavior.getDeclaringClass().getClassPool();
+
+		ClassFilter filter =
+				new AndClassFilter(
+						new NotClassFilter(new InterfaceOnlyClassFilter()),
+						new NotClassFilter(new AbstractClassFilter()),
+						new ClassModifiersClassFilter(Modifier.PUBLIC),
+						new SuperClassFilter(pool, RewardItem.class)
+				);
+		Collection<ClassInfo> foundClasses = new ArrayList<>();
+		finder.findClasses(foundClasses, filter);
+		return foundClasses;
+	}
+
+	private static class SuperClassFilter implements ClassFilter
+	{
+		private ClassPool pool;
+		private CtClass baseClass;
+
+		public SuperClassFilter(ClassPool pool, Class<?> baseClass) throws NotFoundException
+		{
+			this.pool = pool;
+			this.baseClass = pool.get(baseClass.getName());
+		}
+
+		@Override
+		public boolean accept(ClassInfo classInfo, ClassFinder classFinder)
+		{
+			try {
+				CtClass ctClass = pool.get(classInfo.getClassName());
+				while (ctClass != null) {
+					if (ctClass.equals(baseClass)) {
+						return true;
+					}
+					ctClass = ctClass.getSuperclass();
+				}
+			} catch (NotFoundException ignored) {
+			}
+
+			return false;
+		}
+	}
+
 }
