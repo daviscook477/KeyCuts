@@ -14,6 +14,7 @@ import com.megacrit.cardcrawl.helpers.Hitbox;
 import com.megacrit.cardcrawl.helpers.TipHelper;
 import com.megacrit.cardcrawl.helpers.input.InputActionSet;
 import com.megacrit.cardcrawl.localization.UIStrings;
+import com.megacrit.cardcrawl.ui.buttons.CardSelectConfirmButton;
 import com.megacrit.cardcrawl.ui.buttons.ProceedButton;
 import java.util.ArrayList;
 import javassist.CannotCompileException;
@@ -58,6 +59,9 @@ public class ProceedButtonPatches
 		public static void Postfix(ProceedButton self, SpriteBatch sb)
 		{
 			if (!KeyCuts.useProceedHotKeys())
+				return;
+			boolean isHidden = (boolean) ReflectionHacks.getPrivate(self, ProceedButton.class, "isHidden");
+			if (isHidden)
 				return;
 			Hitbox hb = (Hitbox) ReflectionHacks.getPrivate(self, ProceedButton.class, "hb");
 			float x = (float) ReflectionHacks.getPrivate(self, ProceedButton.class, "current_x");
