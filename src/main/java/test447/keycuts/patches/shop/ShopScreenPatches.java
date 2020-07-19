@@ -1,4 +1,4 @@
-package test447.keycuts.patches;
+package test447.keycuts.patches.shop;
 
 import basemod.ReflectionHacks;
 import com.badlogic.gdx.Gdx;
@@ -187,7 +187,7 @@ public class ShopScreenPatches
 			ArrayList<StorePotion> potions = (ArrayList<StorePotion>) ReflectionHacks.getPrivate(self, ShopScreen.class, "potions");
 			for (StorePotion storePotion : potions)
 			{
-				if (!shopRelicPositionMap.containsKey(storePotion))
+				if (!shopPotionPositionMap.containsKey(storePotion))
 					continue;
 				int slot = shopPotionPositionMap.get(storePotion);
 				if (slot >= InputActionSet.selectCardActions.length)

@@ -25,9 +25,15 @@ public class ProceedButtonPatches
 	@SpirePatch(clz=ProceedButton.class, method="update")
 	public static class Update
 	{
+		public static boolean dontProceed = false;
+
 		@SpireInsertPatch(locator=Locator.class)
 		public static void Insert(ProceedButton self)
 		{
+			boolean lastDontProceed = dontProceed;
+			dontProceed = false;
+			if (lastDontProceed)
+				return;
 			if (!KeyCuts.useProceedHotKeys())
 				return;
 			if (InputActionSet.endTurn.isJustPressed())

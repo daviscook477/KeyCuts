@@ -1,4 +1,4 @@
-package test447.keycuts.patches;
+package test447.keycuts.patches.events;
 
 import basemod.ReflectionHacks;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
@@ -21,7 +21,7 @@ public class GenericEventDialogPatches
 			{
 				for (i = 0; i < Math.min(InputActionSet.selectCardActions.length, self.optionList.size()); i++)
 				{
-					if (InputActionSet.selectCardActions[i].isJustPressed() && GenericEventDialog.waitForInput)
+					if (InputActionSet.selectCardActions[i].isJustPressed() && GenericEventDialog.waitForInput && !self.optionList.get(i).isDisabled)
 					{
 						GenericEventDialog.selectedOption = i;
 						self.optionList.get(i).pressed = false;

@@ -1,4 +1,4 @@
-package test447.keycuts.patches;
+package test447.keycuts.patches.rewards;
 
 import com.evacipated.cardcrawl.modthespire.lib.LineFinder;
 import com.evacipated.cardcrawl.modthespire.lib.Matcher;

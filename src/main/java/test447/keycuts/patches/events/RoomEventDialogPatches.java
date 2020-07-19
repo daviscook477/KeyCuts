@@ -1,4 +1,4 @@
-package test447.keycuts.patches;
+package test447.keycuts.patches.events;
 
 import basemod.ReflectionHacks;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
@@ -21,7 +21,7 @@ public class RoomEventDialogPatches
 			{
 				for (i = 0; i < Math.min(InputActionSet.selectCardActions.length, RoomEventDialog.optionList.size()); i++)
 				{
-					if (InputActionSet.selectCardActions[i].isJustPressed() && RoomEventDialog.waitForInput)
+					if (InputActionSet.selectCardActions[i].isJustPressed() && RoomEventDialog.waitForInput && !RoomEventDialog.optionList.get(i).isDisabled)
 					{
 						RoomEventDialog.selectedOption = i;
 						RoomEventDialog.optionList.get(i).pressed = false;

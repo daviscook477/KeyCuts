@@ -1,6 +1,7 @@
-package test447.keycuts.patches;
+package test447.keycuts.patches.rewards;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.evacipated.cardcrawl.modthespire.Loader;
 import com.evacipated.cardcrawl.modthespire.lib.LineFinder;
 import com.evacipated.cardcrawl.modthespire.lib.Matcher;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInsertLocator;
@@ -15,10 +16,19 @@ import com.megacrit.cardcrawl.helpers.Hitbox;
 import com.megacrit.cardcrawl.helpers.input.InputActionSet;
 import com.megacrit.cardcrawl.rewards.RewardItem;
 import com.megacrit.cardcrawl.screens.CombatRewardScreen;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import javassist.CannotCompileException;
+import javassist.ClassPool;
 import javassist.CtBehavior;
+import javassist.CtClass;
+import javassist.NotFoundException;
+import org.clapper.util.classutil.ClassFilter;
+import org.clapper.util.classutil.ClassFinder;
+import org.clapper.util.classutil.ClassInfo;
 import test447.keycuts.KeyCuts;
+import test447.keycuts.helpers.SubclassClassFilter;
 
 public class RewardItemPatches
 {
@@ -69,6 +79,51 @@ public class RewardItemPatches
 		public int[] Locate(CtBehavior ctMethodToPatch) throws CannotCompileException, PatchingException {
 			Matcher finalMatcher = new Matcher.MethodCallMatcher(Hitbox.class, "update");
 			return new int[] {LineFinder.findInOrder(ctMethodToPatch, new ArrayList<>(), finalMatcher)[0] + 1};
+		}
+	}
+
+	public static boolean isJar(File file)
+	{
+		return file.getName().endsWith(".jar");
+	}
+
+	@SpirePatch(clz=RewardItem.class, method="update")
+	public static class RewardItemSubclassUpdate
+	{
+		public static void Raw(CtBehavior ctMethodToPatch)
+		{
+			try
+			{
+				System.out.println("Can I even patch this");
+				ClassPool pool = Loader.getClassPool();
+				ClassFinder finder = new ClassFinder();
+				File modDirectory = new File(Loader.MOD_DIR);
+				ArrayList<File> modJars = new ArrayList<>();
+				for (File mod : modDirectory.listFiles())
+				{
+					if (isJar(mod))
+						modJars.add(mod);
+				}
+				finder.add(modJars);
+				ClassFilter filter = new SubclassClassFilter(RewardItem.class);
+				Collection<ClassInfo> foundClasses = new ArrayList<>();
+				finder.findClasses(foundClasses, filter);
+				for (ClassInfo classInfo : foundClasses)
+				{
+					String name = classInfo.getClassName();
+					System.out.println(name + " is a subclass of RewardItem");
+					try {
+						CtClass clazz = pool.get(name);
+					} catch (NotFoundException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				System.out.println("No you can't patch this b/c: ");
+				e.printStackTrace();
+			}
 		}
 	}
 

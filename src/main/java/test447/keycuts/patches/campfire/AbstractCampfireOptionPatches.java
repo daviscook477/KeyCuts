@@ -1,4 +1,4 @@
-package test447.keycuts.patches;
+package test447.keycuts.patches.campfire;
 
 import basemod.ReflectionHacks;
 import com.evacipated.cardcrawl.modthespire.lib.LineFinder;

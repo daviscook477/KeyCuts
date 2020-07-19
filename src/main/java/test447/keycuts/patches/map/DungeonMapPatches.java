@@ -1,8 +1,9 @@
-package test447.keycuts.patches;
+package test447.keycuts.patches.map;
 
 import basemod.ReflectionHacks;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.evacipated.cardcrawl.modthespire.Loader;
 import com.evacipated.cardcrawl.modthespire.lib.*;
 import com.evacipated.cardcrawl.modthespire.patcher.PatchingException;
 import com.megacrit.cardcrawl.core.Settings;
@@ -18,9 +19,20 @@ import javassist.CtBehavior;
 
 import java.util.ArrayList;
 import test447.keycuts.KeyCuts;
+import test447.keycuts.helpers.MapHelper;
 
 public class DungeonMapPatches
 {
+	public static boolean IsAtBossNode()
+	{
+		boolean hasBoss = DungeonMap.boss != null;
+		boolean inPrecedingMapNodeVanilla = AbstractDungeon.getCurrMapNode().y == 14 ||
+				(AbstractDungeon.id.equals("TheEnding")) && (AbstractDungeon.getCurrMapNode().y == 2);
+		boolean inPrecedingMapNodeDownfall = AbstractDungeon.getCurrMapNode().y == 0;
+		boolean inPrecedingMapNode = MapHelper.isDownfallMap() ? inPrecedingMapNodeDownfall : inPrecedingMapNodeVanilla;
+		return hasBoss && inPrecedingMapNode;
+	}
+
 	@SpirePatch(clz=DungeonMap.class, method="update")
 	public static class Update
 	{
@@ -29,8 +41,7 @@ public class DungeonMapPatches
 		{
 			if (!KeyCuts.useMapHotKeys())
 				return;
-			if (DungeonMap.boss != null && AbstractDungeon.getCurrMapNode().y == 14 &&
-					AbstractDungeon.screen == AbstractDungeon.CurrentScreen.MAP &&
+			if (IsAtBossNode() && AbstractDungeon.screen == AbstractDungeon.CurrentScreen.MAP &&
 					InputActionSet.selectCardActions[0].isJustPressed())
 			{
 				self.bossHb.hovered = true;
@@ -53,12 +64,31 @@ public class DungeonMapPatches
 		{
 			if (!KeyCuts.showMapHotKeys())
 				return;
-			if (DungeonMap.boss != null && AbstractDungeon.getCurrMapNode().y == 14 && AbstractDungeon.screen == AbstractDungeon.CurrentScreen.MAP)
+			if (IsAtBossNode() && AbstractDungeon.screen == AbstractDungeon.CurrentScreen.MAP)
 			{
 				float mapOffsetY = (float) ReflectionHacks.getPrivate(self, DungeonMap.class, "mapOffsetY");
 				float BOSS_OFFSET_Y = (float) ReflectionHacks.getPrivateStatic(DungeonMap.class, "BOSS_OFFSET_Y");
 				// same as BOSS_H b/c image is square
 				float BOSS_W = (float) ReflectionHacks.getPrivateStatic(DungeonMap.class, "BOSS_W");
+				if (MapHelper.isDownfallMap())
+				{
+					try
+					{
+						Class flipMapBossStuff = Class.forName("downfall.patches.ui.map.FlipMap$BossStuff");
+						BOSS_OFFSET_Y = flipMapBossStuff.getDeclaredField("BOSS_OFFSET").getFloat(null);
+						BOSS_W = flipMapBossStuff.getDeclaredField("BOSS_HB_OFFSET").getFloat(null);
+					}
+					catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e)
+					{
+						// rethrow as unchecked exception since silently failing isn't super useful for debugging
+						if (Loader.DEBUG)
+						{
+							throw new RuntimeException(e);
+						}
+						// otherwise silently fail since letting a user continue with mouse clicks is better than crashing
+						// because hotkeys aren't working
+					}
+				}
 				FontHelper.renderFontCentered(sb, FontHelper.buttonLabelFont, InputActionSet.selectCardActions[0].getKeyString(),
 						Settings.WIDTH / 2.0F, DungeonMapScreen.offsetY + mapOffsetY + BOSS_OFFSET_Y + BOSS_W,
 						Color.WHITE, 1.5f);

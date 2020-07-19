@@ -1,4 +1,4 @@
-package test447.keycuts.patches;
+package test447.keycuts.patches.cards;
 
 import basemod.ReflectionHacks;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;

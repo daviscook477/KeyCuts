@@ -1,4 +1,4 @@
-package test447.keycuts.patches;
+package test447.keycuts.patches.cards;
 
 import basemod.ReflectionHacks;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,21 +14,23 @@ import com.megacrit.cardcrawl.helpers.Hitbox;
 import com.megacrit.cardcrawl.helpers.TipHelper;
 import com.megacrit.cardcrawl.helpers.input.InputActionSet;
 import com.megacrit.cardcrawl.localization.UIStrings;
-import com.megacrit.cardcrawl.ui.buttons.GridSelectConfirmButton;
+import com.megacrit.cardcrawl.ui.buttons.CardSelectConfirmButton;
 import java.util.ArrayList;
 import javassist.CannotCompileException;
 import javassist.CtBehavior;
 import test447.keycuts.KeyCuts;
+import test447.keycuts.patches.EndTurnButtonPatches;
+import test447.keycuts.patches.ProceedButtonPatches;
 
-public class GridSelectConfirmButtonPatches
+public class CardSelectConfirmButtonPatches
 {
-	@SpirePatch(clz=GridSelectConfirmButton.class, method="update")
+	@SpirePatch(clz=CardSelectConfirmButton.class, method="update")
 	public static class Update
 	{
 		@SpireInsertPatch(locator=Locator.class)
-		public static void Insert(GridSelectConfirmButton self)
+		public static void Insert(CardSelectConfirmButton self)
 		{
-			if (!KeyCuts.useProceedHotKeys())
+			if (!KeyCuts.allowCardSelectConfirmEndTurn())
 				return;
 			if (InputActionSet.endTurn.isJustPressed())
 			{
@@ -38,6 +40,11 @@ public class GridSelectConfirmButtonPatches
 				// the end turn button firing this press even
 				// though we use same hotkey
 				EndTurnButtonPatches.Update.dontEndTurn = true;
+				// this will be used when choosing rewards
+				// at the end of a room so cant have the proceed
+				// button firing this press even though we
+				// use same hotkey
+				ProceedButtonPatches.Update.dontProceed = true;
 			}
 		}
 	}
@@ -49,21 +56,22 @@ public class GridSelectConfirmButtonPatches
 		}
 	}
 
-	@SpirePatch(clz=GridSelectConfirmButton.class, method="render")
+	@SpirePatch(clz=CardSelectConfirmButton.class, method="render")
 	public static class Render
 	{
-		public static void Postfix(GridSelectConfirmButton self, SpriteBatch sb)
+		public static void Postfix(CardSelectConfirmButton self, SpriteBatch sb)
 		{
-			if (!KeyCuts.useProceedHotKeys())
+			if (!KeyCuts.allowCardSelectConfirmEndTurn())
 				return;
-			float x = (float) ReflectionHacks.getPrivate(self, GridSelectConfirmButton.class, "current_x");
-			float y = (float) ReflectionHacks.getPrivateStatic(GridSelectConfirmButton.class, "DRAW_Y")
-					+ (float) ReflectionHacks.getPrivateStatic(GridSelectConfirmButton.class, "TEXT_OFFSET_Y");
-			String buttonText = (String) ReflectionHacks.getPrivate(self, GridSelectConfirmButton.class, "buttonText");
+			boolean isHidden = (boolean) ReflectionHacks.getPrivate(self, CardSelectConfirmButton.class, "isHidden");
+			if (isHidden)
+				return;
+			float TAKE_Y = (float) ReflectionHacks.getPrivateStatic(CardSelectConfirmButton.class, "TAKE_Y");
+			String buttonText = (String) ReflectionHacks.getPrivate(self, CardSelectConfirmButton.class, "buttonText");
 			UIStrings UIStrings = CardCrawlGame.languagePack.getUIString(KeyCuts.MOD_ID + ":tooltips");
 			String[] TEXT = UIStrings.TEXT;
 			if (self.hb.hovered && !Settings.isTouchScreen) {
-				TipHelper.renderGenericTip(x - 140.0F * Settings.scale, y + 200.0F * Settings.scale, buttonText + " (" +
+				TipHelper.renderGenericTip(Settings.WIDTH / 2.0F - 160.0f * Settings.scale, TAKE_Y - 100.0F * Settings.scale, buttonText + " (" +
 						InputActionSet.endTurn.getKeyString() + ")", TEXT[1]);
 			}
 		}

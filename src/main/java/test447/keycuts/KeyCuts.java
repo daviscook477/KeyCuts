@@ -39,7 +39,7 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
             defaults.put("UseCombatRewardHotKeys", Boolean.toString(true));
             defaults.put("ShowCombatRewardHotKeys", Boolean.toString(true));
 
-            // campfires
+            // campfire
             defaults.put("UseCampfireHotKeys", Boolean.toString(true));
             defaults.put("ShowCampfireHotKeys", Boolean.toString(true));
 
