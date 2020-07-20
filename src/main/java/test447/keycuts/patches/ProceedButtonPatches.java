@@ -14,7 +14,6 @@ import com.megacrit.cardcrawl.helpers.Hitbox;
 import com.megacrit.cardcrawl.helpers.TipHelper;
 import com.megacrit.cardcrawl.helpers.input.InputActionSet;
 import com.megacrit.cardcrawl.localization.UIStrings;
-import com.megacrit.cardcrawl.ui.buttons.CardSelectConfirmButton;
 import com.megacrit.cardcrawl.ui.buttons.ProceedButton;
 import java.util.ArrayList;
 import javassist.CannotCompileException;

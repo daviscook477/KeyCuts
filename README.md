@@ -34,3 +34,4 @@ MIT license
 
 1. test447 (programming and idea)
 2. Slay the Spire modding Discord (brainstorming and feedback)
+3. Gk (testing)
