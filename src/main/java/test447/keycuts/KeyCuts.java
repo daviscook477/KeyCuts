@@ -61,6 +61,10 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
             // card select confirm
             defaults.put("AllowCardSelectConfirmEndTurn", Boolean.toString(true));
 
+            // potions
+            defaults.put("UsePotionHotKeys", Boolean.toString(true));
+            defaults.put("ShowPotionHotKeys", Boolean.toString(true));
+
             modConfig = new SpireConfig("KeyCuts", "Config", defaults);
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,6 +85,7 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
         addToggleButtons(useChestHotKeys(), "UseChestHotKeys", TEXT[11], showChestHotKeys(), "ShowChestHotKeys", TEXT[12], settingsPanel);
         addToggleButtons(useShopHotKeys(), "UseShopHotKeys", TEXT[13], showShopHotKeys(), "ShowShopHotKeys", TEXT[14], settingsPanel);
         addToggleButton(allowCardSelectConfirmEndTurn(), "AllowCardSelectConfirmEndTurn", TEXT[15], settingsPanel);
+        addToggleButtons(usePotionHotKeys(), "UsePotionHotKeys", TEXT[16], showPotionHotKeys(), "ShowPotionHotKeys", TEXT[17], settingsPanel);
         BaseMod.registerModBadge(ImageMaster.loadImage(MOD_ID + "Resources/img/modBadge.png"), MOD_ID, "test447", "Play even more of the game with just your keyboard", settingsPanel);
     }
 
@@ -263,5 +268,19 @@ public class KeyCuts implements PostInitializeSubscriber, EditStringsSubscriber
         if (modConfig == null)
             return false;
         return modConfig.getBool("AllowCardSelectConfirmEndTurn");
+    }
+
+    public static boolean usePotionHotKeys()
+    {
+        if (modConfig == null)
+            return false;
+        return modConfig.getBool("UsePotionHotKeys");
+    }
+
+    public static boolean showPotionHotKeys()
+    {
+        if (modConfig == null)
+            return false;
+        return modConfig.getBool("ShowPotionHotKeys");
     }
 }

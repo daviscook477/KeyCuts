@@ -16,7 +16,9 @@
       "Show a visual indicator of which hotkey to use for each chest option",
       "Enable using your card select hotkeys to choose shop options",
       "Show a visual indicator of which hotkey to use for each shop option",
-      "Enable using your end turn hotkey to confirm card selection"
+      "Enable using your end turn hotkey to confirm card selection",
+      "Enable using your card select hotkeys to use potions",
+      "Show a visual indicator of which hotkey to use for potions"
     ]
   },
   "test447_keycuts:tooltips": {
