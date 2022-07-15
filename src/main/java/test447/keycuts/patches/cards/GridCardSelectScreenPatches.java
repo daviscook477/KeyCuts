@@ -68,6 +68,10 @@ public class GridCardSelectScreenPatches
 				if (InputActionSet.selectCardActions[i].isJustPressed())
 				{
 					int cardPosition = CARDS_PER_LINE * row + i;
+					if(cardPosition >= self.targetGroup.group.length || cardPosition < 0){
+						// card out of range
+						return;
+					}
 					AbstractCard hoveredCard = self.targetGroup.group.get(cardPosition);
 					hoveredCard.hb.clicked = true;
 					ReflectionHacks.setPrivate(self, GridCardSelectScreen.class, "hoveredCard", hoveredCard);
